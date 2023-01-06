@@ -25,9 +25,53 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>React App</title>
+    <!-- <script src="https://scripts.escale.com.br/lead-tracking.min.js" defer="true"></script> -->
+    <!-- <script type="text/javascript" defer="true">
+      ((window, src) => {
+        var script = document.createElement('script');
+        script.setAttribute('src', src);
+        script.setAttribute('async', true);
+        document.body.appendChild(script);
+        script.addEventListener("load", async function(event) {
+          await window.LeadTracking({
+            vertical: 'string',
+            brand: 'e2e-tests',
+            product: 'string',
+            origin: 'string',
+              enableOnDevelopment: true
+          })
+          await window.LeadTracking.pageView()
+        })
+       })(window, 'https://scripts.escale.com.br/lead-tracking.min.js')
+       </script> -->
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+
+    <script>
+      !function(){"use strict";const e="https://api.escale.com.br/lead-data-platform/lead/id",t="https://api.escale.com.br/broker-middleware/v1/event",n="150a6d35ed2f4660af77a6048cc1114b",r="L368WxJyVGYQPqeyoyasY1fD1DIFB0iUxO2U9d7S",a="pub1c7e4e4cc588252a729d38d3cf3f0bd2",o="escaleLead",i="form[id*=escale-os-form]",s={};var c,d,l,u,g;c=window,d=document,l="script",u="https://www.datadoghq-browser-agent.com/datadog-logs-v4.js",c=c[g="DD_LOGS"]=c[g]||{q:[],onReady:function(e){c.q.push(e)}},(g=d.createElement(l)).async=1,g.src=u,(u=d.getElementsByTagName(l)[0]).parentNode.insertBefore(g,u);(async()=>{const c=e=>{const t=document.cookie.split("; ").find((t=>t.startsWith(`${e}=`)))?.split("=")[1];return"undefined"===t?"":t},d=async(e="")=>{if(Object.keys(s).includes(e))return s[e];try{const t=await fetch("https://api.ipify.org?format=json");if(!t.ok)return DD_LOGS?.logger?.error?.(`Error getting user IP | ${t.status} | ${t.statusText}`),"";const n=await t.json();return s[e]=n.ip,n.ip}catch(e){return DD_LOGS?.logger?.error?.(`Error getting user IP | 500 | ${e}`),""}};window.LeadTracking=async function({vertical:s="",brand:l="",product:u="",origin:g="",formQuery:m='iframe[id*="hs-form"]',fieldQuery:_='input[name="lead_id"]',enableOnDevelopment:p=!1}){window.DD_LOGS&&DD_LOGS.onReady((function(){DD_LOGS.init({clientToken:a,site:"datadoghq.com",sampleRate:100,forwardErrorsToLogs:!1,service:"lead-tracking"})}));const w=new URL(window.location.href),f=w.searchParams.get("utm_source")||"",y=w.searchParams.get("utm_medium")||"",D=w.searchParams.get("utm_campaign")||"",h=w.searchParams.get("gclid")||"",v=w.searchParams.get("fbclid")||"";if((e=>!!(e&&"localhost"===e.location.hostname||e.location.hostname.includes("staging")||e.location.hostname.includes("127.0.0.1")))(window)&&!p)return"Lead tracking is disabled on development, enable it by setting enableOnDevelopment to true";const S=(e="form",t,n)=>{const r=window.document.querySelector(e),a=r?.querySelector?.(t),o=t?.includes("website")||t?.includes("lead_id");if(r&&a)return r.querySelector(t).value=n,o&&DD_LOGS?.logger?.info?.(`Field ${t} filled on ${r?.id} with ${n} value`);r&&!a&&o&&DD_LOGS?.logger?.warn?.(`Field ${t} not found on form ${r?.id} | page url: ${window.location.href}`)},b=(e,t,n)=>{const r=window.document.querySelector(e)||window.document.querySelector("iframe[id*=escale-os-form]");if(!r?.contentDocument)return null;const a=t?.includes("website")||t?.includes("lead_id");if(r.contentDocument.querySelector(t))return r.contentDocument.querySelector(t).value=n,a&&DD_LOGS?.logger?.info?.(`Field ${t} filled on form ${r?.id||e} with ${n} value`);a&&DD_LOGS?.logger?.warn?.(`Field ${t} not found on form ${r?.id} | page url: ${window.location.href}`)},L=e=>{const t=e.getTimezoneOffset(),n=Math.abs(t);return new Date(e.getTime()-60*t*1e3).toISOString().substr(0,23)+(t>0?"-":"+")+Math.floor(n/60).toFixed(0).padStart(2,"0")+":"+(n%60).toString().padStart(2,"0")};let O=c(o);const k=()=>{const e=new Headers;return e.append("Authorization",`Basic ${btoa(n+":"+r)}`),e.append("Content-Type","application/json"),e};if(!O?.length||"undefined"===O){const t=await d(),n=await(async({vertical:t,brand:n,...r})=>{try{const a=await fetch(e,{method:"POST",body:JSON.stringify({vertical:t,partner:n,...r}),headers:k()});return a.ok?await a.json():DD_LOGS?.logger?.error?.(`Error generating lead id | ${a.status} | ${a.statusText}`)}catch(e){return DD_LOGS?.logger?.error?.(`Error generating lead id | 500 | ${e}`),""}})({vertical:s,brand:l,utm_medium:y,utm_source:f,utm_campaign:D,ipaddress:t});(({key:e,value:t})=>{document.cookie=`${e}=${t}; path=/; domain=${window.location.hostname};`})({key:o,value:n?.leadId}),O=n?.leadId}const $=async(e={})=>{if(!(e=>{try{return JSON.stringify(e),!0}catch{return!1}})(e))return DD_LOGS?.logger?.error?.(`Invalid schema for ${e.event_type} event`,e);try{const n=await fetch(String(t),{method:"POST",body:JSON.stringify({...e}),headers:k()});return n.ok?n:DD_LOGS?.logger?.error?.(`Error sending ${e.event_type} event | ${n.status} | ${n.statusText}`)}catch(t){return DD_LOGS?.logger?.error?.(`Error sending ${e.event_type} event | 500 | ${t}`,e),t}},T=async({event:e,...t}={})=>{const n=await d(!1),{navigator:r={}}=window,{target:a={}}=e||{},o=a?.tagName||"",i="string"==typeof a?.className?a?.className:a?.className?.baseVal||"",c=a?.id||t?.click_id||"",m=a?.value||a?.innerText||a?.innerHTML||"",_=a?.href||"",p=a?.target||"",w=await(r?.userAgentData?.getHighEntropyValues?.(["architecture","platform","platformVersion","model","bitness","uaFullVersion"]))||{};return{topic:"eventhub-attribution",source:"Lead Tracking - lib",vertical:s,brand:l,product:u,event_timestamp:L(new Date),event_type:t?.event_type||"pageview",page_url:window.location.href,lead_id:O||"",id_user_ads:h||v,utm_medium:y,utm_source:f,utm_campaign:D,ipaddress:n,origin:g,device_family:r?.userAgentData?.mobile?"mobile":"desktop",language:r?.language||"",user_agent:r?.userAgent||"",os_family:r?.userAgentData?.platform||r?.platform||"",browser_family:r.userAgentData?.brands?.[2]?.brand||"",browser_major:r.userAgentData?.brands?.[0]?.version||"",browser_minor:r.userAgentData?.brands?.[1]?.version||"",os_major:w?.platformVersion||"",os_minor:w?.appVersion||"",click_classes:i,click_text:m,click_element:o,click_url:_,click_target:p,click_id:c}};async function A(e,t){const n=await T({event:e,click_id:t,event_type:"click",page_url:window.location.href});$(n)}window.addEventListener("click",A,!0),window.LeadTracking.__proto__.pageView=async function(e){$(await T({event:e}))},window.LeadTracking.__proto__.click=A,window.LeadTracking.__proto__.getCookie=()=>c(o),setTimeout((()=>{S(i,'input[name*="utm_campaign"]',D),S(i,'input[name*="lead_id"]',O||c(o)),S(i,'input[name*="brand"]',l),S(i,'input[name*="website"]',window.location.href);const e=document.querySelector(m);e?.contentWindow&&(e.contentWindow.postMessage({type:"lead-tracking",payload:{leadId:O||c(o),utmCampaign:D,utmMedium:y,utmSource:f,website:window.location.href,brand:l}},"*"),DD_LOGS?.logger?.info?.("Sending lead data to iframe form")),b(m,_,O||c(o)),b(m,"input[name*=website]",window.location.href),b(m,"input[name=utm_campaign]",D),b(m,"input[name=brand]",l)}),5e3)}})()}();
+    </script>
+
+
+    <script type="text/javascript">
+      
+
+          window.LeadTracking({
+            vertical: 'string',
+            brand: 'e2e-tests',
+            product: 'string',
+            origin: 'string',
+            enableOnDevelopment: true
+          }).then(()=> {
+            window.LeadTracking.pageView()
+          })
+
+          window.onhashchange = function () {
+            console.log('window.onhashchange')
+            window.LeadTracking.pageView()
+          }
+
+    </script>
     <div id="root"></div>
     <!--
       This HTML file is a template.
@@ -39,5 +83,7 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    
+   
   </body>
 </html>
